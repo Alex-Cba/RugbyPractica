@@ -1,0 +1,38 @@
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: rugby
+      MYSQL_USER: rwc
+      MYSQL_PASSWORD: rwc123
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    networks:
+      - rwc-network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/rugby
+      SPRING_DATASOURCE_USERNAME: rwc
+      SPRING_DATASOURCE_PASSWORD: rwc123
+      EXTERNAL_API_URL: https://my-json-server.typicode.com/LCIV-2023/fake-api-rwc2023
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - rwc-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "--silent" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+networks:
+  rwc-network:
