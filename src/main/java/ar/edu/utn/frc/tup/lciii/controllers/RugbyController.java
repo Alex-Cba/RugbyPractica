@@ -11,11 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * /rwc/2023/pools: To list all available pools with standings.
- * /rwc/2023/pools/{pool_id}: To retrieve standings for a specific pool.
- */
-
 @RestController
 @RequestMapping("/rwc/2023")
 public class RugbyController {
