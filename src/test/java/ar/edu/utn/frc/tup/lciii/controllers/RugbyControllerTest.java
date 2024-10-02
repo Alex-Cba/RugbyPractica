@@ -47,7 +47,6 @@ public class RugbyControllerTest {
         assertEquals(List.of(expectedPool), response.getBody());
     }
 
-
     @Test
     void testGetPoolById() {
         char poolId = 'A';

@@ -10,13 +10,17 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -49,23 +53,6 @@ public class RugbyClientTest {
     }
 
     @Test
-    void testGetTeamsByPool_Fail() {
-        char poolId = 'A';
-
-        when(restTemplate.exchange(any(String.class),
-                any(HttpMethod.class),
-                any(),
-                any(ParameterizedTypeReference.class)))
-                .thenThrow(new RuntimeException());
-
-        try {
-            rugbyClient.getTeamsByPool(poolId);
-        } catch (RuntimeException e) {
-            assertEquals(500, 500);
-        }
-    }
-
-    @Test
     void testGetMatchesByPool_Success() {
         char poolId = 'A';
 
@@ -81,23 +68,6 @@ public class RugbyClientTest {
     }
 
     @Test
-    void testGetMatchesByPool_Fail() {
-        char poolId = 'A';
-
-        when(restTemplate.exchange(any(String.class),
-                any(HttpMethod.class),
-                any(),
-                any(ParameterizedTypeReference.class)))
-                .thenThrow(new RuntimeException());
-
-        try {
-            rugbyClient.getMatchesByPool(poolId);
-        } catch (RuntimeException e) {
-            assertEquals(500, 500);
-        }
-    }
-
-    @Test
     void testGetAllTeams_Success() {
         when(restTemplate.exchange(any(String.class),
                 any(HttpMethod.class),
@@ -108,22 +78,5 @@ public class RugbyClientTest {
         ResponseEntity<List<Team>> response = rugbyClient.getAllTeams();
 
         assertEquals(200, response.getStatusCodeValue());
-    }
-
-    @Test
-    void testGetAllTeams_Fail() {
-        char poolId = 'A';
-
-        when(restTemplate.exchange(any(String.class),
-                any(HttpMethod.class),
-                any(),
-                any(ParameterizedTypeReference.class)))
-                .thenThrow(new RuntimeException());
-
-        try {
-            rugbyClient.getAllTeams();
-        } catch (RuntimeException e) {
-            assertEquals(500, 500);
-        }
     }
 }

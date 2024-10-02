@@ -23,26 +23,32 @@ public class RugbyService implements IRugbyService {
     public List<PoolResponseDTO> GetAllPools() {
         List<PoolResponseDTO> response = new java.util.ArrayList<>(List.of());
 
-        var teams = rugbyClient.getAllTeams().getBody();
+        var checkTeams = rugbyClient.getAllTeams();
 
-        if (teams == null || teams.isEmpty()) {
+        if (checkTeams == null || checkTeams.getBody() == null || checkTeams.getBody().isEmpty()) {
             throw new NotFoundException("Teams not found");
         }
+
+        var teams = checkTeams.getBody();
 
         var pools = teams.stream().map(Team::pool).distinct().toList();
 
         for (var poolId : pools) {
-            var team = rugbyClient.getTeamsByPool(poolId).getBody();
+            var checkTeam = rugbyClient.getTeamsByPool(poolId);
 
-            if (team == null || team.isEmpty()) {
+            if (checkTeam == null || checkTeam.getBody() == null || checkTeam.getBody().isEmpty()) {
                 throw new NotFoundException("Teams not found for pool: " + poolId);
             }
 
-            var matches = rugbyClient.getMatchesByPool(poolId).getBody();
+            var team = checkTeam.getBody();
 
-            if (matches == null || matches.isEmpty()) {
+            var checkMatches = rugbyClient.getMatchesByPool(poolId);
+
+            if (checkMatches == null || checkMatches.getBody() == null || checkMatches.getBody().isEmpty()) {
                 throw new NotFoundException("Matches not found for pool: " + poolId);
             }
+
+            var matches = checkMatches.getBody();
 
             var tempResult = new PoolResponseDTO();
             tempResult.setId(poolId);
@@ -72,17 +78,21 @@ public class RugbyService implements IRugbyService {
     @Override
     public PoolResponseDTO GetPoolById(char poolId) {
 
-        var teams = rugbyClient.getTeamsByPool(poolId).getBody();
+        var checkTeams = rugbyClient.getTeamsByPool(poolId);
 
-        if (teams == null || teams.isEmpty()) {
+        if (checkTeams == null || checkTeams.getBody() == null || checkTeams.getBody().isEmpty()) {
             throw new NotFoundException("Teams not found for pool: " + poolId);
         }
 
-        var matches = rugbyClient.getMatchesByPool(poolId).getBody();
+        var teams = checkTeams.getBody();
 
-        if (matches == null || matches.isEmpty()) {
+        var checkMatches = rugbyClient.getMatchesByPool(poolId);
+
+        if (checkMatches == null || checkMatches.getBody() == null || checkMatches.getBody().isEmpty()) {
             throw new NotFoundException("Matches not found for pool: " + poolId);
         }
+
+        var matches = checkMatches.getBody();
 
         var response = new PoolResponseDTO();
         response.setId(poolId);
