@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class GlobalExceptionController {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Not Found",
                     content = @Content)
