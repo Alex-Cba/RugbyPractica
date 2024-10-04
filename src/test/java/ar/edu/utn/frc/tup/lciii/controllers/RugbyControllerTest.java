@@ -65,7 +65,7 @@ public class RugbyControllerTest {
 
     @Test
     void testGetPoolByIdNotFoundException() throws Exception {
-        given(rugbyService.GetPoolById('Z')).willThrow(new NotFoundException("Teams not found"));
+        given(rugbyService.GetPoolById('Z')).willThrow(new NotFoundException("Teams not found for pool: Z"));
 
         mockMvc.perform(get("/rwc/2023/pools/{pool_id}", 'Z'))
                 .andExpect(status().isNotFound())
